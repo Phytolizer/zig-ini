@@ -24,14 +24,16 @@ pub fn build(b: *std.Build) void {
     example_c.linkLibC();
     b.installArtifact(example_c);
 
+    const ini_mod = b.addModule("ini", .{
+        .source_file = .{ .path = "src/ini.zig" },
+    });
+
     const example_zig = b.addExecutable(.{
         .name = "example-zig",
         .root_source_file = .{ .path = "example/example.zig" },
         .optimize = optimize,
     });
-    example_zig.addAnonymousModule("ini", .{
-        .source_file = .{ .path = "src/ini.zig" },
-    });
+    example_zig.addModule("ini", ini_mod);
     b.installArtifact(example_zig);
 
     var main_tests = b.addTest(.{
