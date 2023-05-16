@@ -12,7 +12,7 @@ pub fn build(b: *std.Build) void {
     lib.bundle_compiler_rt = true;
     lib.addIncludePath("src");
     lib.linkLibC();
-    lib.install();
+    b.installArtifact(lib);
 
     const example_c = b.addExecutable(.{
         .name = "example-c",
@@ -22,7 +22,7 @@ pub fn build(b: *std.Build) void {
     example_c.addIncludePath("src");
     example_c.linkLibrary(lib);
     example_c.linkLibC();
-    example_c.install();
+    b.installArtifact(example_c);
 
     const example_zig = b.addExecutable(.{
         .name = "example-zig",
@@ -32,7 +32,7 @@ pub fn build(b: *std.Build) void {
     example_zig.addAnonymousModule("ini", .{
         .source_file = .{ .path = "src/ini.zig" },
     });
-    example_zig.install();
+    b.installArtifact(example_zig);
 
     var main_tests = b.addTest(.{
         .root_source_file = .{ .path = "src/test.zig" },

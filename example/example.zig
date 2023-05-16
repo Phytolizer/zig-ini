@@ -6,7 +6,7 @@ pub fn main() !void {
     defer file.close();
 
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    defer if (gpa.deinit()) @panic("memory leaked");
+    defer std.debug.assert(gpa.deinit() == .ok);
     var parser = ini.parse(gpa.allocator(), file.reader());
     defer parser.deinit();
 
